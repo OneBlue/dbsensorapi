@@ -2,7 +2,7 @@
 
 This repository contains a basic HTTP endpoint to fetch information from a decibel sensor sensor like [this one](https://pcbartists.com/product/i2c-decibel-sound-level-meter-module/).
 
-The output is an averaged value, in prometheus format.
+The output is an averaged value and a maximum value in a given poll, in prometheus format.
 
 ## Usage:
 
@@ -16,7 +16,8 @@ By default the HTTP server will run on 127.0.0.1:8000, and will us i2c_bus=1, an
 
 ```
 $ curl localhost:8000
-dbsensor_dba 42
+dbsensor_average_dba 35.67
+dbsensor_max_dba 36.00
 ```
 
 ## Sample systemd unit

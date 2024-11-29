@@ -15,6 +15,7 @@ class Sensor:
         self.address = address
 
         self.current_average = None
+        self.current_max = None
         self.thread = None
         self.event = Event()
         self.lock = Lock()
@@ -22,7 +23,6 @@ class Sensor:
 
     def run(self):
         print('Poll thread starting')
-
 
         try:
             values = []
@@ -36,12 +36,12 @@ class Sensor:
                     del values[0]
 
                 with self.lock:
+                    self.current_max = max(values)
                     self.current_average = fmean(values)
 
                 if self.event.wait(self.poll_rate):
                     break
 
-                print(f'Current: {self.current_average}')
         except:
             print(f'Caught exception on polling thread: {traceback.format_exc()}')
 
@@ -64,7 +64,7 @@ class Sensor:
 
     def value(self) -> float:
         with self.lock:
-            return self.current_average
+            return self.current_average, self.current_max
 
 @click.command()
 @click.option('--listen-address', default='127.0.0.1')
@@ -81,7 +81,7 @@ def main(listen_address: str, listen_port: int, i2c_bus: int, i2c_address: int, 
 
     @app.route('/', methods=['GET'])
     def get():
-        content = 'dbsensor_dba {:.2f}\n'.format(sensor.value())
+        content = 'dbsensor_average_dba {:.2f}\ndbsensor_max_dba {:.2f}\n'.format(*sensor.value())
         return content, 200
 
 
