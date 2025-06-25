@@ -1,4 +1,4 @@
-# An API endpoint for a decibel sensor sensor
+# An API endpoint for a decibel sensor
 
 This repository contains a basic HTTP endpoint to fetch information from a decibel sensor sensor like [this one](https://pcbartists.com/product/i2c-decibel-sound-level-meter-module/).
 
